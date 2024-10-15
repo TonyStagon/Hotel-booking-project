@@ -1,0 +1,68 @@
+/* src/components/Home.css */
+
+.home-container {
+    height: 100vh;
+    /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Vertically center content */
+    align-items: center;
+    /* Horizontally center content */
+    text-align: center;
+    background-image: url('/src/components/round.jpg');
+    /* Set the background image */
+    background-size: cover;
+    /* Make the image cover the entire container */
+    background-position: center;
+    background-repeat: no-repeat;
+    padding-top: 70px;
+    /* Padding to account for the fixed navbar */
+    padding-bottom: 60px;
+    /* Padding to account for the footer */
+}
+
+.home-container h1,
+.home-container p {
+    color: white;
+    /* Set the text color to white */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Add a subtle shadow for readability */
+}
+
+.home-container h1 {
+    font-size: 50px;
+    margin-top: 10px;
+}
+
+.home-container p {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.home-container button {
+    padding: 15px 30px;
+    background-color: #205519;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.home-container button:hover {
+    background-color: #00cc66;
+}
+
+@media (max-width: 768px) {
+    .home-container h1 {
+        font-size: 36px;
+    }
+    .home-container p {
+        font-size: 18px;
+    }
+    .home-container button {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}

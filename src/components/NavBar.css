@@ -1,0 +1,88 @@
+/* src/components/NavBar.css */
+
+.navbar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #325c21;
+    ;
+    /* Updated background color */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.navbar ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar li {
+    margin: 0 15px;
+}
+
+.navbar li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.navbar li a:hover {
+    color: #68e792;
+    /* Slight hover effect */
+}
+
+
+/* Beautifying the Innovation Hub text */
+
+.navbar .innovation-hub {
+    font-size: 26px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: white;
+}
+
+.navbar-link {
+    color: white;
+    text-decoration: none;
+    font-size: 24px;
+}
+
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+
+/* Custom Book Now button */
+
+.navbar .book-now-btn {
+    background-color: #ffffff;
+    /* White button */
+    color: #52e73f;
+    /* Green text */
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: 2px solid #52e73f;
+    cursor: pointer;
+}
+
+.navbar .book-now-btn:hover {
+    background-color: #00cc66;
+    /* Change on hover */
+    color: white;
+    border: 2px solid #00cc66;
+}
