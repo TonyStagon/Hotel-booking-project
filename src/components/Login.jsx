@@ -1,29 +1,37 @@
 // src/components/Login.jsx
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import './Login.css'; // Import the styling for the login page
-import './NavBar.css'; // Import the styling for the navbar
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useAuth } from './AuthContext'; // Import your AuthContext
+import './Login.css';
+import './NavBar.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const { login, currentUser } = useAuth(); // Use the login function from AuthContext
+  const navigate = useNavigate(); // Get navigate function
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Basic validation
     if (!email || !password) {
       setError('Please enter both email and password.');
       return;
     }
 
-    setError(null); // Clear previous errors
+    setError(null);
+
     try {
-      // Placeholder for login logic
-      console.log('Logging in with', email, password);
+      const user = await login(email, password);
+      // Assuming user has a role property
+      if (user.role === 'admin') {
+        navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+      } else {
+        navigate('/dashboard'); // Redirect to User Dashboard
+      }
     } catch (err) {
-      setError('Failed to log in.');
+      setError('Failed to log in. Please check your credentials.');
     }
   };
 

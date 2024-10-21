@@ -1,32 +1,35 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { auth } from './firebase'; // Correct import for Firebase auth
+// src/AuthContext.js
+import React, { createContext, useContext, useState } from 'react';
+import { auth, db } from './firebase'; // Make sure to import your Firebase configuration
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
-const AuthContext = React.createContext();
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
-      setLoading(false);
-    });
+  const login = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
-    return unsubscribe;
-  }, []);
+      // Fetch the user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid)); // Adjust collection name accordingly
+      const userData = userDoc.data();
 
-  const value = {
-    currentUser,
+      setCurrentUser({ ...user, role: userData.role }); // Set the current user with role
+      return { ...user, role: userData.role }; // Return user data including role
+    } catch (error) {
+      throw new Error(error.message);
+    }
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
+    <AuthContext.Provider value={{ currentUser, login }}>
+      {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);
