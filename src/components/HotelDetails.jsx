@@ -110,4 +110,4 @@ const HotelDetails = () => {
   );
 };
 
-export default HotelDetails;
+export default HotelDetails; 

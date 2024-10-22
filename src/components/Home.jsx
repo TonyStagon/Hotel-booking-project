@@ -5,6 +5,7 @@ import NavBar from './NavBar'; // Import Navbar
 import Footer from './Footer'; // Import Footer
 import './Home.css'; // Add CSS styles for Home component
 
+
 const Home = () => {
   return (
     <div className="home-container">

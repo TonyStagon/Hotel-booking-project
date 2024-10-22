@@ -1,10 +1,47 @@
-// FinancePage.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('your-publishable-key-here'); // Replace with your Stripe publishable key
 
 const FinancePage = () => {
   const location = useLocation();
   const { hotel, searchCriteria } = location.state || {};
+  const [clientSecret, setClientSecret] = useState('');
+
+  useEffect(() => {
+    // Fetch the payment intent client secret when the page loads
+    fetch('https://<your-project-id>.cloudfunctions.net/api/create-payment-intent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount: hotel.price * searchCriteria.guests, // The total price to pay
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => setClientSecret(data.clientSecret))
+      .catch((error) => console.error('Error fetching client secret:', error));
+  }, [hotel, searchCriteria]);
+
+  const handlePayment = async () => {
+    const stripe = await stripePromise;
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: { /* Add card details collection form here */ },
+      },
+    });
+
+    if (result.error) {
+      console.error('Payment error:', result.error.message);
+    } else {
+      if (result.paymentIntent.status === 'succeeded') {
+        alert('Payment successful!');
+      }
+    }
+  };
 
   if (!hotel || !searchCriteria) {
     return <p>Reservation details are missing. Please go back and try again.</p>;
@@ -22,10 +59,8 @@ const FinancePage = () => {
         <p>Guests: {searchCriteria.guests}</p>
       </div>
 
-      {/* Payment form or options go here */}
-      <button onClick={() => alert('Payment processing coming soon!')}>
-        Proceed to Payment
-      </button>
+      {/* Add a simple payment form here */}
+      <button onClick={handlePayment}>Proceed to Payment</button>
     </div>
   );
 };

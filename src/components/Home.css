@@ -1,33 +1,41 @@
 /* src/components/Home.css */
 
+
+/* Ensure that the navbar doesn't overlap the content */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* Home container */
+
 .home-container {
-    height: 100vh;
-    /* Full viewport height */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Vertically center content */
     align-items: center;
-    /* Horizontally center content */
     text-align: center;
     background-image: url('/src/components/round.jpg');
-    /* Set the background image */
     background-size: cover;
-    /* Make the image cover the entire container */
     background-position: center;
     background-repeat: no-repeat;
-    padding-top: 70px;
-    /* Padding to account for the fixed navbar */
-    padding-bottom: 60px;
+    padding-top: 0px;
+    /* Increase this to match your navbar height */
+    padding-bottom: 270px;
     /* Padding to account for the footer */
 }
+
+
+/* Headline and paragraph styling */
 
 .home-container h1,
 .home-container p {
     color: white;
-    /* Set the text color to white */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    /* Add a subtle shadow for readability */
 }
 
 .home-container h1 {
@@ -39,6 +47,9 @@
     font-size: 24px;
     margin-bottom: 20px;
 }
+
+
+/* Button styling */
 
 .home-container button {
     padding: 15px 30px;
@@ -54,6 +65,9 @@
     background-color: #00cc66;
 }
 
+
+/* Responsive Design for Tablets and Mobile Devices */
+
 @media (max-width: 768px) {
     .home-container h1 {
         font-size: 36px;
@@ -64,5 +78,24 @@
     .home-container button {
         padding: 10px 20px;
         font-size: 16px;
+    }
+}
+
+
+/* Further Optimizations for Small Mobile Screens */
+
+@media (max-width: 480px) {
+    .home-container {
+        padding: 0 20px;
+    }
+    .home-container h1 {
+        font-size: 28px;
+    }
+    .home-container p {
+        font-size: 16px;
+    }
+    .home-container button {
+        padding: 8px 16px;
+        font-size: 14px;
     }
 }
