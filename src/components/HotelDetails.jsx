@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useNavigate
-import './HotelDetails.css'; // Add CSS styling for HotelDetails
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import './HotelDetails.css';
 
 const HotelDetails = () => {
   const location = useLocation();
-  const { hotel } = location.state || {}; // Get hotel data from state
-  const navigate = useNavigate(); // Use navigate for redirection
+  const { hotel } = location.state || {};
+  const navigate = useNavigate();
 
-  // Search criteria state
   const [searchCriteria, setSearchCriteria] = useState({
     checkIn: '',
     checkOut: '',
@@ -23,22 +23,39 @@ const HotelDetails = () => {
     });
   };
 
-  // Handle the search button click
-  const handleSearch = () => {
-    console.log('Search criteria:', searchCriteria);
-    // Add your search logic here, e.g., API call or filtering hotels
-  };
-
   // Handle the 'Proceed to Reserve' button click
   const handleReserve = () => {
-    console.log('Proceeding to reserve...');
-    // Navigate to FinancePage and pass the hotel and search criteria as state
-    navigate('/finance', {
-      state: {
-        hotel,
-        searchCriteria,
-      },
-    });
+    if (!hotel) return; // Ensure hotel data exists
+
+    // Custom notification with buttons for Yes/No
+    toast.info(
+      <div>
+        <p>Hotel {hotel.name} is booked! Do you wish to complete payment?</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <button onClick={() => handlePaymentChoice(true)}>Yes</button>
+          <button onClick={() => handlePaymentChoice(false)}>No</button>
+        </div>
+      </div>,
+      {
+        position: 'top-center',
+        autoClose: false,
+        closeOnClick: false,
+      }
+    );
+  };
+
+  // Handle the user's choice
+  const handlePaymentChoice = (proceedToPayment) => {
+    toast.dismiss(); // Close the toast notification
+    if (proceedToPayment) {
+      // If 'Yes', navigate to the FinancePage
+      navigate('/finance', {
+        state: { hotel, searchCriteria },
+      });
+    } else {
+      // If 'No', navigate back to the dashboard
+      navigate('/dashboard');
+    }
   };
 
   if (!hotel) {
@@ -47,7 +64,6 @@ const HotelDetails = () => {
 
   return (
     <div className="hotel-details-container">
-      {/* Search form at the top */}
       <div className="search-form">
         <input
           type="date"
@@ -78,19 +94,16 @@ const HotelDetails = () => {
           placeholder="Number of Guests"
           min="1"
         />
-        <button onClick={handleSearch}>Search</button>
+        <button onClick={handleReserve}>Search</button>
       </div>
 
-      {/* Hotel details below the search form */}
       <h1>{hotel.name}</h1>
       <div className="hotel-details">
-        {/* Check if hotel.gallery exists and has at least one image */}
         {hotel.gallery && hotel.gallery.length > 0 ? (
           <img src={hotel.gallery[0]} alt={hotel.name} className="hotel-main-image" />
         ) : (
           <p>No image available</p>
         )}
-
         <div className="hotel-info">
           <p>Location: {hotel.location}</p>
           <p>Price per night: ${hotel.price}</p>
@@ -100,7 +113,6 @@ const HotelDetails = () => {
         </div>
       </div>
 
-      {/* Proceed to Reserve button */}
       <div className="reserve-button-container">
         <button onClick={handleReserve} className="reserve-button">
           Proceed to Reserve
@@ -110,4 +122,4 @@ const HotelDetails = () => {
   );
 };
 
-export default HotelDetails; 
+export default HotelDetails;

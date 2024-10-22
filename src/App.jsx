@@ -11,17 +11,20 @@ import HotelDetails from './components/HotelDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 import FinancePage from './components/FinancePage'; // Your finance page
 import Account from './components/Account'; // Import Account component
-
 import BookNow from './components/BookNow'; // Make sure you have this component
 
 import { AuthProvider } from './components/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="App">
+           <ToastContainer />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -32,10 +35,14 @@ function App() {
             <Route path="/finance" element={<FinancePage />} /> {/* Corrected Route */}
             <Route path="/admin-dashboard" element={<ProtectedRoute adminElement={<AdminDashboard />} />} />
       
-     <Route path="/book-now" element={<BookNow />} /> {/* Route for Book Now */}
-
+         <Route path="/book-now" element={<BookNow />} /> {/* Route for Book Now */}
+        
             <Route path="/account" element={<Account />} /> {/* Added Account Route */}
+     
+    
+
             <Route path="*" element={<Home />} />
+         
           </Routes>
         </div>
       </Router>
