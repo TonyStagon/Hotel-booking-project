@@ -128,32 +128,7 @@ const Dashboard = () => {
         </Carousel>
       </div>
 
-      {/* List of hotels posted by admin */}
-      <div className="hotels-list">
-        <h2>Available Hotels</h2>
-        {hotels.length > 0 ? (
-          hotels.map((hotel) => (
-            <div key={hotel.id} className="hotel-item">
-              <h3>{hotel.name}</h3>
-              <img
-                src={
-                  hotel.gallery && hotel.gallery.length > 0
-                    ? hotel.gallery[0]
-                    : 'https://via.placeholder.com/150'
-                }
-                alt={hotel.name}
-                className="hotel-thumbnail"
-                onError={(e) => (e.target.src = 'https://via.placeholder.com/150')}
-              />
-              <p>Location: {hotel.location}</p>
-              <p>Price per night: ${hotel.price}</p>
-              <p>Rating: {hotel.rating} stars</p>
-            </div>
-          ))
-        ) : (
-          <p>No hotels available.</p>
-        )}
-      </div>
+    
     </div>
   );
 };

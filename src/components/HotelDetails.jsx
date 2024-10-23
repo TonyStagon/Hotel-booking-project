@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { addDoc, collection } from 'firebase/firestore'; // Import Firestore functions
+import { db } from './firebase'; // Import the Firestore database
 import './HotelDetails.css';
 
 const HotelDetails = () => {
@@ -15,7 +17,6 @@ const HotelDetails = () => {
     guests: 1,
   });
 
-  // Handle input changes in the form
   const handleChange = (e) => {
     setSearchCriteria({
       ...searchCriteria,
@@ -23,28 +24,44 @@ const HotelDetails = () => {
     });
   };
 
-  // Handle the 'Proceed to Reserve' button click
-  const handleReserve = () => {
-    if (!hotel) return; // Ensure hotel data exists
+  const handleReserve = async () => {
+    if (!hotel) return;
 
-    // Custom notification with buttons for Yes/No
-    toast.info(
-      <div>
-        <p>Hotel {hotel.name} is booked! Do you wish to complete payment?</p>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button onClick={() => handlePaymentChoice(true)}>Yes</button>
-          <button onClick={() => handlePaymentChoice(false)}>No</button>
-        </div>
-      </div>,
-      {
-        position: 'top-center',
-        autoClose: false,
-        closeOnClick: false,
-      }
-    );
+    try {
+      // Save booking information in Firestore
+      const bookingData = {
+        hotelName: hotel.name,
+        checkIn: searchCriteria.checkIn,
+        checkOut: searchCriteria.checkOut,
+        location: searchCriteria.location,
+        guests: searchCriteria.guests,
+        price: hotel.price,
+        reservedAt: new Date(),
+      };
+
+      await addDoc(collection(db, "bookings"), bookingData); // Save booking to Firestore
+
+      // Show toast notification
+      toast.info(
+        <div>
+          <p>Hotel {hotel.name} is booked! Do you wish to complete payment?</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <button onClick={() => handlePaymentChoice(true)}>Yes</button>
+            <button onClick={() => handlePaymentChoice(false)}>No</button>
+          </div>
+        </div>,
+        {
+          position: 'top-center',
+          autoClose: false,
+          closeOnClick: false,
+        }
+      );
+    } catch (error) {
+      console.error("Error booking hotel:", error);
+      toast.error("Failed to book the hotel. Please try again.");
+    }
   };
 
-  // Handle the user's choice
   const handlePaymentChoice = (proceedToPayment) => {
     toast.dismiss(); // Close the toast notification
     if (proceedToPayment) {
