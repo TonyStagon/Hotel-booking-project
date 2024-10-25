@@ -1,10 +1,10 @@
-// src/components/BookNow.jsx
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase'; // Import your Firestore database
-import './BookNow.css'; // Add your CSS styles
+import { db } from './firebase';
+import './BookNow.css';
+import NavBar from './NavBar'; // NavBar already imported
+import { useAuth } from './AuthContext';
 
 const BookNow = () => {
   const [hotels, setHotels] = useState([]);
@@ -17,19 +17,18 @@ const BookNow = () => {
   });
 
   const navigate = useNavigate();
+  const { currentUser, onLogout } = useAuth(); // Use the currentUser from AuthContext
 
-  // Fetch hotels from Firestore
   useEffect(() => {
     const fetchHotels = async () => {
       const hotelCollection = await getDocs(collection(db, 'hotels'));
       const hotelsList = hotelCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setHotels(hotelsList);
-      setFilteredHotels(hotelsList); // Initialize filtered hotels
+      setFilteredHotels(hotelsList);
     };
     fetchHotels();
   }, []);
 
-  // Handle input change for the search form
   const handleChange = (e) => {
     setSearchCriteria({
       ...searchCriteria,
@@ -37,27 +36,26 @@ const BookNow = () => {
     });
   };
 
-  // Filter hotels based on search criteria
   const handleSearch = () => {
     const { checkIn, checkOut, location, guests } = searchCriteria;
     const filtered = hotels.filter(hotel => {
       const matchesLocation = hotel.location.toLowerCase().includes(location.toLowerCase());
-      const matchesGuests = hotel.capacity >= guests; // Ensure 'capacity' field exists in your hotel data
+      const matchesGuests = hotel.capacity >= guests;
       return matchesLocation && matchesGuests;
     });
     setFilteredHotels(filtered);
   };
 
-  // Navigate to the HotelDetails page with the selected hotel's data
   const handleReserve = (hotel) => {
-    navigate(`/hotel/${hotel.id}`, { state: { hotel } }); // Pass hotel data to HotelDetails page
+    navigate(`/hotel/${hotel.id}`, { state: { hotel } });
   };
 
   return (
     <div className="booknow-container">
-      <h1>Book Now</h1>
+      {/* Display NavBar */}
+      {currentUser && <NavBar user={currentUser} onLogout={onLogout} />}
 
-      {/* Search Form */}
+      <h1>Book Now</h1>
       <div className="search-form">
         <input
           type="date"
@@ -91,7 +89,6 @@ const BookNow = () => {
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      {/* Display filtered hotels */}
       <div className="hotel-list">
         {filteredHotels.length > 0 ? (
           filteredHotels.map((hotel) => (
@@ -100,30 +97,6 @@ const BookNow = () => {
               <p>Location: {hotel.location}</p>
               <p>Price per night: ${hotel.price}</p>
               <p>Rating: {hotel.rating} stars</p>
-              <p>
-                Facilities: {Array.isArray(hotel.facilities) ? hotel.facilities.join(', ') : 'N/A'}
-              </p>
-              <p>
-                Policies: {Array.isArray(hotel.policies) ? hotel.policies.join(', ') : 'N/A'}
-              </p>
-
-              {/* Display Hotel Images */}
-              <div className="hotel-gallery">
-                {hotel.gallery && hotel.gallery.length > 0 ? (
-                  hotel.gallery.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Hotel ${hotel.name} - ${index + 1}`}
-                      className="hotel-image"
-                    />
-                  ))
-                ) : (
-                  <p>No images available for this hotel.</p>
-                )}
-              </div>
-
-              {/* Reserve Button */}
               <button onClick={() => handleReserve(hotel)}>Reserve</button>
             </div>
           ))

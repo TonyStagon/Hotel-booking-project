@@ -29,34 +29,52 @@ const CheckoutForm = ({ hotel, searchCriteria }) => {
     // Get card details
     const cardElement = elements.getElement(CardElement);
 
-    // Communicate with backend to create a PaymentIntent
-    const { error, paymentIntent } = await stripe.confirmCardPayment('client-secret-from-backend', {
-      payment_method: {
-        card: cardElement,
-        billing_details: {
-          name: 'User Name', // Retrieve this from your app's state
-        },
-      },
-    });
+    try {
+      // Communicate with backend to create a PaymentIntent
+      const response = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: hotel.price * searchCriteria.guests * 100, // Convert amount to cents
+        }),
+      });
 
-    if (error) {
-      console.error(error);
-    } else if (paymentIntent.status === 'succeeded') {
-      alert('Payment successful!');
-      // Navigate to confirmation page or display success message
+      const { clientSecret } = await response.json();
+
+      // Confirm the payment with the client secret received from the backend
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: 'User Name', // Retrieve this dynamically from your app's state or user context
+          },
+        },
+      });
+
+      if (error) {
+        console.error(error);
+        alert('Payment failed! Please try again.');
+      } else if (paymentIntent.status === 'succeeded') {
+        alert('Payment successful!');
+        // Navigate to confirmation page or display success message
+      }
+    } catch (error) {
+      console.error('Error in payment process:', error);
+      alert('Error processing payment. Please try again later.');
     }
+
     setProcessing(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="checkout-form">
       <h3>Payment for {hotel.name}</h3>
       <p>Location: {hotel.location}</p>
       <p>Check-in: {searchCriteria.checkIn}</p>
       <p>Check-out: {searchCriteria.checkOut}</p>
       <p>Total amount: ${hotel.price * searchCriteria.guests}</p>
 
-      <CardElement />
+      <CardElement className="card-element" />
       <button type="submit" disabled={isProcessing || !stripe}>
         {isProcessing ? 'Processing...' : 'Pay Now'}
       </button>

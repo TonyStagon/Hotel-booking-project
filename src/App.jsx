@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import Home from './components/Home';
 import Login from './components/Login';
@@ -12,37 +12,38 @@ import ProtectedRoute from './components/ProtectedRoute';
 import FinancePage from './components/FinancePage'; // Your finance page
 import Account from './components/Account'; // Import Account component
 import BookNow from './components/BookNow'; // Make sure you have this component
-
-import { AuthProvider } from './components/AuthContext';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { AuthProvider, useAuth } from './components/AuthContext'; // Import useAuth hook
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Booked from './components/Booked'; // Import Booked component
+import PaymentPage from './components/PaymentPage'; // Import PaymentPage
 
 function App() {
+  const { currentUser } = useAuth(); // Access currentUser from AuthContext
+
   return (
     <AuthProvider>
       <Router>
         <div className="App">
-           <ToastContainer />
+          <ToastContainer />
           <Routes>
-            <Route path="/" element={<Home />} />
+            {/* Conditionally redirect to dashboard if logged in */}
+            <Route 
+              path="/" 
+              element={currentUser ? <Navigate to="/dashboard" /> : <Home />} 
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/discover" element={<Discover />} /> {/* New Discover Route */}
+            <Route path="/discover" element={<Discover />} />
             <Route path="/hotel/:id" element={<HotelDetails />} />
             <Route path="/dashboard" element={<ProtectedRoute userElement={<Dashboard />} />} />
-            <Route path="/finance" element={<FinancePage />} /> {/* Corrected Route */}
+            <Route path="/finance" element={<FinancePage />} />
             <Route path="/admin-dashboard" element={<ProtectedRoute adminElement={<AdminDashboard />} />} />
-      
-         <Route path="/book-now" element={<BookNow />} /> {/* Route for Book Now */}
-        
-            <Route path="/account" element={<Account />} /> {/* Added Account Route */}
-     
-    
-
+            <Route path="/book-now" element={<BookNow />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/booked" element={<ProtectedRoute userElement={<Booked />} />} />
+            <Route path="/payment" element={<PaymentPage />} />
             <Route path="*" element={<Home />} />
-         
           </Routes>
         </div>
       </Router>
@@ -51,5 +52,3 @@ function App() {
 }
 
 export default App;
-
-

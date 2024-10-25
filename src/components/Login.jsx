@@ -1,6 +1,6 @@
 // src/components/Login.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; // Import your AuthContext
 import './Login.css';
 import './NavBar.css';
@@ -9,7 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const { login, currentUser } = useAuth(); // Use the login function from AuthContext
+  const { login } = useAuth(); // Use the login function from AuthContext
   const navigate = useNavigate(); // Get navigate function
 
   const handleLogin = async (e) => {
@@ -24,11 +24,11 @@ const Login = () => {
 
     try {
       const user = await login(email, password);
-      // Assuming user has a role property
+      // After login, navigate based on role
       if (user.role === 'admin') {
-        navigate('/admin-dashboard'); // Redirect to Admin Dashboard
+        navigate('/admin-dashboard');
       } else {
-        navigate('/dashboard'); // Redirect to User Dashboard
+        navigate('/dashboard');
       }
     } catch (err) {
       setError('Failed to log in. Please check your credentials.');
@@ -37,10 +37,9 @@ const Login = () => {
 
   return (
     <div>
-      {/* Navbar */}
       <nav className="navbar">
         <div className="navbar-logo">
-          <Link to="/" className="navbar-link">Innovation Hub</Link>
+          <Link to="/" className="navbar-link">EnviroHotel</Link>
         </div>
         <ul className="navbar-links">
           <li><Link to="/">Home</Link></li>
@@ -50,7 +49,6 @@ const Login = () => {
         </ul>
       </nav>
 
-      {/* Login Form */}
       <div className="login-container">
         <h2 className="login-title">Login</h2>
         {error && <p className="login-error">{error}</p>}

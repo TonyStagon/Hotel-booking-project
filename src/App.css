@@ -83,3 +83,41 @@
 
 
 /* src/components/Home.css */
+
+.custom-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #325c21;
+    /* Primary color */
+    padding: 10px 20px;
+    color: white;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 15px;
+    /* Space between links */
+}
+
+.navbar-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: #c82333;
+    /* Darker shade for hover */
+}
+
+.user-initial {
+    color: white;
+    font-weight: bold;
+    padding: 0 10px;
+}

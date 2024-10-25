@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { db, storage } from './firebase'; // Firebase Firestore and Storage instances
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // For Firebase Storage
+import { Link } from 'react-router-dom'; // For navigation links
+import './AdminDashboard.css';
+
 
 const AdminDashboard = () => {
   const [hotels, setHotels] = useState([]);
@@ -98,13 +101,11 @@ const AdminDashboard = () => {
 
   // Upload images to Firebase Storage and return URLs
   const uploadImages = async (imageFiles) => {
-    const imageUrls = [];
-    for (const image of imageFiles) {
-      const storageRef = ref(storage, `hotels/${image.name}`);
-      const uploadTask = await uploadBytesResumable(storageRef, image);
-      const downloadURL = await getDownloadURL(uploadTask.ref);
-      imageUrls.push(downloadURL);
-    }
+    const imageUrls = await Promise.all(imageFiles.map(async (imageFile) => {
+      const storageRef = ref(storage, `hotels/${imageFile.name}`);
+      const uploadTask = await uploadBytesResumable(storageRef, imageFile);
+      return await getDownloadURL(uploadTask.ref);
+    }));
     return imageUrls;
   };
 
@@ -125,7 +126,17 @@ const AdminDashboard = () => {
 
   return (
     <div className="admin-dashboard">
-      <h1>Admin Dashboard</h1>
+      {/* Navigation Bar */}
+      <nav className="admin-navbar">
+        <h2>Admin Dashboard</h2>
+        <div className="navbar-links">
+          <Link to="/dashboard">Dashboard</Link>
+          <Link to="/add-hotel">Add Hotel</Link>
+          <Link to="/manage-hotels">Manage Hotels</Link>
+        </div>
+      </nav>
+
+      <h1>Manage Hotels</h1>
 
       {/* Add New Hotel Form */}
       <form onSubmit={handleSubmit}>

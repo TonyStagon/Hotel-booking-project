@@ -1,16 +1,17 @@
-// src/AuthContext.js
-import React, { createContext, useContext, useState } from 'react';
-import { auth, db } from './firebase'; // Make sure to import your Firebase configuration
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { auth, db } from './firebase'; // Import your Firebase configuration
+import { setPersistence, browserLocalPersistence, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'; // Import Firebase auth methods
+import { getDoc, doc } from 'firebase/firestore'; // Import Firestore methods for fetching user roles
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true); // New state to handle loading
 
   const login = async (email, password) => {
     try {
+      await setPersistence(auth, browserLocalPersistence);
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
@@ -24,6 +25,26 @@ export const AuthProvider = ({ children }) => {
       throw new Error(error.message);
     }
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Fetch user role from Firestore
+        const userDoc = await getDoc(doc(db, 'users', user.uid)); // Adjust collection name accordingly
+        const userData = userDoc.data();
+        setCurrentUser({ ...user, role: userData.role });
+      } else {
+        setCurrentUser(null); // User is logged out
+      }
+      setLoading(false); // Set loading to false after checking the auth state
+    });
+
+    return () => unsubscribe(); // Cleanup the subscription
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Optionally render a loading state while Firebase checks auth status
+  }
 
   return (
     <AuthContext.Provider value={{ currentUser, login }}>

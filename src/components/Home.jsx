@@ -13,7 +13,7 @@ const Home = () => {
 
       <div className="home-content">
         <p>Hotel & Resort</p>
-        <h1>Welcome To InnovationHub</h1>
+        <h1>Welcome To Enviro-Hotel </h1>
         
         {/* Link the button to the Discover page */}
         <Link to="/discover">

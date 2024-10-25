@@ -1,11 +1,11 @@
 // src/components/Dashboard.jsx
 
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom'; // Use NavLink for navigation
+import { NavLink, useNavigate } from 'react-router-dom'; // Use NavLink for navigation
 import { Carousel } from 'react-bootstrap'; // Carousel for image slides
 import { db, auth } from './firebase'; // Import Firestore database and Firebase auth
 import './Dashboard.css'; // Ensure you have styles for your component
-import hotelImage1 from '../assets/hotel2.jpg'; // Example of how to import images from assets
+import hotelImage1 from '../assets/hotel2.jpg'; // Import images from assets
 import hotelImage2 from '../assets/hotel.jpg';
 import hotelImage3 from '../assets/hotel3.jpg';
 import hotelImage4 from '../assets/hotel1.jpg';
@@ -13,6 +13,7 @@ import hotelImage4 from '../assets/hotel1.jpg';
 const Dashboard = () => {
   const [hotels, setHotels] = useState([]);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch hotels from Firestore when the component mounts
   useEffect(() => {
@@ -31,9 +32,7 @@ const Dashboard = () => {
 
     // Get the currently logged-in user
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      }
+      setUser(currentUser);
     });
 
     fetchHotels();
@@ -43,30 +42,30 @@ const Dashboard = () => {
   }, []);
 
   // Extract the first letter of the user's email
-  const getUserInitial = () => {
-    return user?.email ? user.email.charAt(0).toUpperCase() : '';
-  };
+  const getUserInitial = () => user?.email?.charAt(0).toUpperCase() || '';
 
-  // Generate a random color
+  // Generate a random color for user initials
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    return `#${Array.from({ length: 6 }, () => letters[Math.floor(Math.random() * 16)]).join('')}`;
+  };
+
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      navigate('/login'); // Redirect to login after logout
+    });
   };
 
   return (
     <div className="dashboard-container">
       {/* Custom Navbar section */}
       <nav className="custom-navbar">
-        <div className="navbar-brand">Hotel Booking App</div>
+        <div className="navbar-brand">EnviroHotel</div>
         <div className="navbar-links">
           <NavLink to="/account">Account</NavLink>
           <NavLink to="/booked">Booked</NavLink>
           <NavLink to="/book-now">Book Now</NavLink> {/* Add Book Now link here */}
-          <NavLink to="/logout">Log out</NavLink>
+          <button onClick={handleLogout}>Log out</button> {/* Log out button */}
           {user && (
             <span
               className="user-initial"
@@ -89,7 +88,7 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      <h1>Dashboard</h1>
+      <h1>WELCOME TO THE DASHBOARD</h1>
 
       {/* Search form and carousel */}
       <div className="carousel-section">
@@ -98,7 +97,7 @@ const Dashboard = () => {
             <img className="d-block w-100" src={hotelImage1} alt="Hotel 1" />
             <Carousel.Caption>
               <h3>Norway Resort</h3>
-              <p>Take an unforgettable tour of Norway. And rest in our nature-friendly hotel</p>
+              <p>Take an unforgettable tour of Norway. And rest in our nature-friendly hotel.</p>
             </Carousel.Caption>
           </Carousel.Item>
 
@@ -127,8 +126,6 @@ const Dashboard = () => {
           </Carousel.Item>
         </Carousel>
       </div>
-
-    
     </div>
   );
 };
