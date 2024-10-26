@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { db } from './firebase';
 import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { Link, useNavigate } from 'react-router-dom';
 import './Reservations.css';
 
 const Reservations = () => {
   const [reservations, setReservations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchReservations = async () => {
@@ -36,8 +38,23 @@ const Reservations = () => {
     }
   };
 
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="reservations-container">
+      <nav className="admin-navbar">
+        <h2>Admin Dashboard</h2>
+        <div className="navbar-links">
+          <Link to="/admin-dashboard">Dashboard</Link>
+          <Link to="/add-hotel">Add Hotel</Link>
+          <Link to="/manage-hotels">Manage Hotels</Link>
+          <Link to="/reservations">Reservations</Link>
+          <button onClick={handleLogout} className="logout-button">Logout</button>
+        </div>
+      </nav>
+
       <h1>Reservations</h1>
       {reservations.map((reservation) => (
         <div key={reservation.id} className="reservation-item">
