@@ -44,9 +44,9 @@ const Account = () => {
           <p>Manage your login details and security settings</p>
         </div>
         <div className="grid-item" onClick={() => handleClick('/account/upload-picture')}>
-          <h3>Upload Profile Picture</h3>
-          <p>Update your profile picture</p>
-        </div>
+  <h3>Upload Profile Picture</h3>
+  <p>Update your profile picture</p>
+</div>
       </div>
     </div>
   );

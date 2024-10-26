@@ -1,0 +1,27 @@
+/* Reservations.css */
+
+.reservations-container {
+    padding: 20px;
+}
+
+.reservation-item {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.reservation-item h3 {
+    margin-top: 0;
+}
+
+.reservation-item button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.reservation-item button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}

@@ -1,16 +1,17 @@
+// src/components/Booked.jsx
 import React, { useEffect, useState } from 'react';
 import { db } from './firebase';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './Booked.css';
-import NavBar from './NavBar'; // NavBar already imported
+import NavBar from './NavBar';
 import { useAuth } from './AuthContext';
 
 const Booked = () => {
   const [bookedHotels, setBookedHotels] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const { currentUser, onLogout } = useAuth(); // Use the currentUser from AuthContext
+  const { currentUser, logout } = useAuth(); // Use logout directly from AuthContext
 
   useEffect(() => {
     const fetchBookedHotels = async () => {
@@ -41,7 +42,7 @@ const Booked = () => {
   return (
     <div className="booked-container">
       {/* Display NavBar */}
-      {currentUser && <NavBar user={currentUser} onLogout={onLogout} />}
+      {currentUser && <NavBar user={currentUser} onLogout={logout} />}
 
       <h1 className="booked-header">Your Booked Hotels</h1>
       {error && <p className="error-message">Error: {error}</p>}

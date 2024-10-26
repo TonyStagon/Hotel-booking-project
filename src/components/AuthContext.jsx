@@ -1,53 +1,51 @@
+// src/components/AuthProvider.jsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { auth, db } from './firebase'; // Import your Firebase configuration
-import { setPersistence, browserLocalPersistence, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'; // Import Firebase auth methods
-import { getDoc, doc } from 'firebase/firestore'; // Import Firestore methods for fetching user roles
+import { auth, db } from './firebase';
+import { onAuthStateChanged, signOut, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDoc, doc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true); // New state to handle loading
-
-  const login = async (email, password) => {
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Fetch the user role from Firestore
-      const userDoc = await getDoc(doc(db, 'users', user.uid)); // Adjust collection name accordingly
-      const userData = userDoc.data();
-
-      setCurrentUser({ ...user, role: userData.role }); // Set the current user with role
-      return { ...user, role: userData.role }; // Return user data including role
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Fetch user role from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid)); // Adjust collection name accordingly
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
         const userData = userDoc.data();
-        setCurrentUser({ ...user, role: userData.role });
+        setCurrentUser({ ...user, role: userData.role, profilePicture: userData.profilePicture });
       } else {
-        setCurrentUser(null); // User is logged out
+        setCurrentUser(null);
       }
-      setLoading(false); // Set loading to false after checking the auth state
+      setLoading(false);
     });
 
-    return () => unsubscribe(); // Cleanup the subscription
+    return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>; // Optionally render a loading state while Firebase checks auth status
-  }
+  const login = async (email, password) => {
+    const { user } = await signInWithEmailAndPassword(auth, email, password);
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    const userData = userDoc.data();
+    setCurrentUser({ ...user, role: userData.role, profilePicture: userData.profilePicture });
+    return { ...user, ...userData };
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      setCurrentUser(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
-    <AuthContext.Provider value={{ currentUser, login }}>
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

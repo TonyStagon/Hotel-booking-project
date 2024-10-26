@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { db, storage } from './firebase'; // Firebase Firestore and Storage instances
+import { db, storage, auth } from './firebase'; // Firebase Firestore, Storage, and Auth instances
 import { collection, addDoc, getDocs, deleteDoc, updateDoc, doc } from 'firebase/firestore';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'; // For Firebase Storage
-import { Link } from 'react-router-dom'; // For navigation links
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
 import './AdminDashboard.css';
-
 
 const AdminDashboard = () => {
   const [hotels, setHotels] = useState([]);
@@ -16,12 +16,13 @@ const AdminDashboard = () => {
     rating: '',
     facilities: '',
     policies: '',
+    roomsAvailable: 0, // New field for rooms available
   });
-  const [images, setImages] = useState([]); // State to handle images
-  const [uploading, setUploading] = useState(false); // State for uploading progress
-  const [editingHotelId, setEditingHotelId] = useState(null); // State to track which hotel is being edited
+  const [images, setImages] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [editingHotelId, setEditingHotelId] = useState(null);
+  const navigate = useNavigate();
 
-  // Fetch hotels data
   useEffect(() => {
     const fetchHotels = async () => {
       const hotelCollection = await getDocs(collection(db, 'hotels'));
@@ -30,11 +31,19 @@ const AdminDashboard = () => {
     fetchHotels();
   }, []);
 
-  // Add new hotel
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
+  };
+
   const addHotel = async () => {
     try {
       setUploading(true);
-      const galleryUrls = await uploadImages(images); // Upload images and get their URLs
+      const galleryUrls = await uploadImages(images);
       const docRef = await addDoc(collection(db, 'hotels'), { ...newHotel, gallery: galleryUrls });
       setHotels([...hotels, { id: docRef.id, ...newHotel, gallery: galleryUrls }]);
       resetForm();
@@ -45,17 +54,13 @@ const AdminDashboard = () => {
     }
   };
 
-  // Update hotel
   const updateHotel = async () => {
     try {
       setUploading(true);
       let galleryUrls = newHotel.gallery;
-
-      // If new images are provided, upload them and get their URLs
       if (images.length > 0) {
         galleryUrls = await uploadImages(images);
       }
-
       const hotelDoc = doc(db, 'hotels', editingHotelId);
       await updateDoc(hotelDoc, { ...newHotel, gallery: galleryUrls });
       setHotels(hotels.map(hotel => (hotel.id === editingHotelId ? { ...hotel, ...newHotel, gallery: galleryUrls } : hotel)));
@@ -67,24 +72,17 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (editingHotelId) {
-      updateHotel(); // Call update function if editing
-    } else {
-      addHotel(); // Call add function if adding
-    }
+    editingHotelId ? updateHotel() : addHotel();
   };
 
-  // Edit hotel
   const editHotel = (id) => {
     const hotelToEdit = hotels.find(hotel => hotel.id === id);
     setNewHotel(hotelToEdit);
     setEditingHotelId(id);
   };
 
-  // Delete hotel
   const deleteHotel = async (id) => {
     try {
       await deleteDoc(doc(db, 'hotels', id));
@@ -94,12 +92,15 @@ const AdminDashboard = () => {
     }
   };
 
-  // Handle image file selection
   const handleImageChange = (e) => {
-    setImages([...e.target.files]);
+    const selectedImages = Array.from(e.target.files);
+    if (selectedImages.length > 3) {
+      alert("You can only upload up to 3 images.");
+    } else {
+      setImages(selectedImages);
+    }
   };
 
-  // Upload images to Firebase Storage and return URLs
   const uploadImages = async (imageFiles) => {
     const imageUrls = await Promise.all(imageFiles.map(async (imageFile) => {
       const storageRef = ref(storage, `hotels/${imageFile.name}`);
@@ -109,7 +110,6 @@ const AdminDashboard = () => {
     return imageUrls;
   };
 
-  // Reset form fields
   const resetForm = () => {
     setNewHotel({
       name: '',
@@ -119,26 +119,38 @@ const AdminDashboard = () => {
       rating: '',
       facilities: '',
       policies: '',
+      roomsAvailable: 0,
     });
     setImages([]);
-    setEditingHotelId(null); // Reset editing state
+    setEditingHotelId(null);
+  };
+
+  // Placeholder functions for handling reservations
+  const approveReservation = (id) => {
+    console.log(`Approved reservation for hotel ID: ${id}`);
+    // Logic to update the reservation status in Firestore
+  };
+
+  const declineReservation = (id) => {
+    console.log(`Declined reservation for hotel ID: ${id}`);
+    // Logic to update the reservation status in Firestore
   };
 
   return (
     <div className="admin-dashboard">
-      {/* Navigation Bar */}
       <nav className="admin-navbar">
         <h2>Admin Dashboard</h2>
         <div className="navbar-links">
           <Link to="/dashboard">Dashboard</Link>
           <Link to="/add-hotel">Add Hotel</Link>
           <Link to="/manage-hotels">Manage Hotels</Link>
+          <Link to="/reservations">Reservations</Link> {/* Link to Reservations page */}
+          <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>
       </nav>
 
       <h1>Manage Hotels</h1>
 
-      {/* Add New Hotel Form */}
       <form onSubmit={handleSubmit}>
         <h2>{editingHotelId ? "Edit Hotel" : "Add New Hotel"}</h2>
         <input
@@ -172,21 +184,32 @@ const AdminDashboard = () => {
         <textarea
           placeholder="Facilities (comma separated)"
           value={newHotel.facilities}
-          onChange={(e) => setNewHotel({ ...newHotel, facilities: e.target.value.split(',').map(f => f.trim()) })} // Ensure trimming of spaces
+          onChange={(e) => setNewHotel({ ...newHotel, facilities: e.target.value.split(',').map(f => f.trim()) })}
         />
         <textarea
           placeholder="Policies (comma separated)"
           value={newHotel.policies}
-          onChange={(e) => setNewHotel({ ...newHotel, policies: e.target.value.split(',').map(p => p.trim()) })} // Ensure trimming of spaces
+          onChange={(e) => setNewHotel({ ...newHotel, policies: e.target.value.split(',').map(p => p.trim()) })}
         />
-        {/* Image upload input */}
-        <input type="file" multiple onChange={handleImageChange} />
-        <button type="submit" disabled={uploading}>
+        <input
+          type="number"
+          placeholder="Number of Rooms Available" // Input for available rooms
+          value={newHotel.roomsAvailable}
+          onChange={(e) => setNewHotel({ ...newHotel, roomsAvailable: e.target.value })}
+          required
+        />
+        <input
+          type="file"
+          multiple
+          onChange={handleImageChange}
+          accept="image/*"
+        />
+        {images.length > 3 && <p className="error">Please upload up to 3 images only.</p>}
+        <button type="submit" disabled={uploading || images.length > 3}>
           {uploading ? 'Uploading...' : (editingHotelId ? 'Update Hotel' : 'Add Hotel')}
         </button>
       </form>
 
-      {/* Display Existing Hotels */}
       <div>
         <h2>Your Hotels</h2>
         {hotels.map((hotel) => (
@@ -195,18 +218,16 @@ const AdminDashboard = () => {
             <p>Location: {hotel.location}</p>
             <p>Price: {hotel.price}</p>
             <p>Rating: {hotel.rating}</p>
-            <p>
-              Facilities: {Array.isArray(hotel.facilities) ? hotel.facilities.join(', ') : 'N/A'}
-            </p>
-            <p>
-              Policies: {Array.isArray(hotel.policies) ? hotel.policies.join(', ') : 'N/A'}
-            </p>
-            {/* Display images */}
+            <p>Facilities: {Array.isArray(hotel.facilities) ? hotel.facilities.join(', ') : 'N/A'}</p>
+            <p>Policies: {Array.isArray(hotel.policies) ? hotel.policies.join(', ') : 'N/A'}</p>
+            <p>Rooms Available: {hotel.roomsAvailable}</p>
             {hotel.gallery.map((imageUrl, index) => (
               <img key={index} src={imageUrl} alt={`${hotel.name}-${index}`} width="100" />
             ))}
             <button onClick={() => editHotel(hotel.id)}>Edit</button>
             <button onClick={() => deleteHotel(hotel.id)}>Delete</button>
+            {/* Buttons to approve and decline reservations */}
+         
           </div>
         ))}
       </div>

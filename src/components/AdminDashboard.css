@@ -1,23 +1,31 @@
 /* General Styling */
 
+html,
 body {
+    margin: 0;
+    padding: 0;
     font-family: 'Roboto', sans-serif;
     background-color: #f8f9fa;
     color: #343a40;
-    margin: 0;
-    padding: 0;
 }
 
 
 /* Navbar */
 
 .admin-navbar {
+    position: relative;
+    top: 0;
+    z-index: 10;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #186e07;
-    padding: 10px 20px;
+    padding: 0 70px;
+    /* Only side padding */
     color: white;
+    width: 100%;
+    margin-top: -5%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .admin-navbar .navbar-links {
@@ -38,12 +46,12 @@ body {
 /* Admin Dashboard Container */
 
 .admin-dashboard {
-    padding: 40px;
+    padding: 5px;
     background-color: #fdfdfe;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     margin: 40px auto;
-    max-width: 1100px;
+    max-width: 100%;
 }
 
 .admin-dashboard h1 {
@@ -182,5 +190,68 @@ body {
     }
     .hotel-item {
         padding: 20px;
+    }
+}
+
+
+/* Responsive Design for Various Devices */
+
+
+/* Large Screens (Desktops) */
+
+@media (min-width: 1200px) {
+    .admin-navbar {
+        padding: 0 60px;
+    }
+    .admin-dashboard h1 {
+        font-size: 3em;
+    }
+    .admin-dashboard h2 {
+        font-size: 2.5em;
+    }
+}
+
+
+/* Medium Screens (Tablets) */
+
+@media (max-width: 768px) {
+    .admin-navbar {
+        padding: 0 40px;
+        font-size: 0.9em;
+    }
+    .admin-dashboard {
+        padding: 15px;
+        margin: 20px auto;
+    }
+    .admin-dashboard h1 {
+        font-size: 2.2em;
+    }
+    .admin-dashboard h2 {
+        font-size: 1.8em;
+    }
+}
+
+
+/* Small Screens (Phones) */
+
+@media (max-width: 576px) {
+    .admin-navbar {
+        padding: 0 15px;
+    }
+    .admin-dashboard {
+        padding: 10px;
+        margin: 15px auto;
+    }
+    .admin-dashboard h1 {
+        font-size: 1.8em;
+    }
+    .admin-dashboard h2 {
+        font-size: 1.4em;
+    }
+    .hotel-item {
+        padding: 15px;
+    }
+    .hotel-item h3 {
+        font-size: 1.6em;
     }
 }

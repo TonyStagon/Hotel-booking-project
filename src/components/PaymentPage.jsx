@@ -5,7 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import './PaymentPage.css';
 
 // Load your Stripe public key
-const stripePromise = loadStripe('your-public-key-here');
+const stripePromise = loadStripe('pk_test_51QDhySK00NR3qztWpPut9XbyDJBEXmT5kS30f49cVi7yGoR4QpYuaVObIOILM8UGUwk0V9LNzdGhlxDKNLzZlNY900HE3Mbmjt');
 
 const PaymentPage = ({ hotel, searchCriteria }) => {
   return (
@@ -20,17 +20,17 @@ const CheckoutForm = ({ hotel, searchCriteria }) => {
   const elements = useElements();
   const [isProcessing, setProcessing] = useState(false);
 
+  
+  // Place the handleSubmit function here
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) return;
 
     setProcessing(true);
 
-    // Get card details
     const cardElement = elements.getElement(CardElement);
 
     try {
-      // Communicate with backend to create a PaymentIntent
       const response = await fetch('/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -40,13 +40,17 @@ const CheckoutForm = ({ hotel, searchCriteria }) => {
       });
 
       const { clientSecret } = await response.json();
+      console.log('Client Secret:', clientSecret); // Log the client secret
 
-      // Confirm the payment with the client secret received from the backend
+      if (!clientSecret || typeof clientSecret !== 'string') {
+        throw new Error('Invalid client secret returned from backend.');
+      }
+
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: 'User Name', // Retrieve this dynamically from your app's state or user context
+            name: 'User Name', // Update this to use dynamic user info if available
           },
         },
       });
