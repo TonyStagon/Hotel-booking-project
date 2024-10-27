@@ -143,7 +143,7 @@ const AdminDashboard = () => {
         <div className="navbar-links">
           <Link to="/admin-dashboard">Dashboard</Link>
        
-          <Link to="/manage-hotels">Manage Hotels</Link>
+        
           <Link to="/reservations">Reservations</Link> {/* Link to Reservations page */}
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>

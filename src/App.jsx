@@ -22,7 +22,7 @@ import Booked from './components/Booked';
 import PaymentPage from './components/PaymentPage';
 import Reservations from './components/Reservations';
 import UploadPicture from './components/UploadPicture'; // Import UploadPicture
-
+import LoginUpdates from './components/LoginUpdates';
 // Load your Stripe public key
 const stripePromise = loadStripe('pk_test_51QDhySK00NR3qztWpPut9XbyDJBEXmT5kS30f49cVi7yGoR4QpYuaVObIOILM8UGUwk0V9LNzdGhlxDKNLzZlNY900HE3Mbmjt');
 
@@ -50,6 +50,7 @@ function App() {
               <Route path="/admin-dashboard" element={<ProtectedRoute adminElement={<AdminDashboard />} />} />
               <Route path="/reservations" element={<AdminProtectedRoute><Reservations /></AdminProtectedRoute>} />
               <Route path="/book-now" element={<BookNow />} />
+              <Route path="/account/login-updates" element={<LoginUpdates />} />
               <Route path="/account" element={<Account />} />
               <Route path="/booked" element={<ProtectedRoute userElement={<Booked />} />} />
               <Route path="/payment" element={<PaymentPage />} />

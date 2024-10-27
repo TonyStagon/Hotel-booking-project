@@ -4,7 +4,7 @@ import { storage, db, auth } from './firebase';
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import './UploadPicture.css';
-
+import CustomNavBar from './CustomNavBar';
 const UploadPicture = () => {
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -65,13 +65,17 @@ const UploadPicture = () => {
   };
 
   return (
+    <div>
+         <CustomNavBar />
+    
     <div className="upload-picture-container">
+         
       <input type="file" onChange={handleImageChange} />
       <button onClick={handleUpload}>Upload</button>
       {profilePicture && <button onClick={handleDelete}>Delete Picture</button>}
       <progress value={progress} max="100" />
       {profilePicture && <img src={profilePicture} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
-    </div>
+    </div></div>
   );
 };
 
