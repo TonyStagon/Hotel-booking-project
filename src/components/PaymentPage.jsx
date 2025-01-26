@@ -38,7 +38,7 @@ const CheckoutForm = ({ hotel, searchCriteria }) => {
           amount: hotel.price * searchCriteria.guests * 100, // Convert amount to cents
         }),
       });
-
+``
       const { clientSecret } = await response.json();
       console.log('Client Secret:', clientSecret); // Log the client secret
 
