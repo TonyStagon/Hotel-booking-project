@@ -1,10 +1,9 @@
 // src/components/Login.jsx
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext'; // Import your AuthContext
-
+import NavBar from './NavBar'; // Import NavBar
 import './Login.css';
-import './NavBar.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -38,18 +37,7 @@ const Login = () => {
 
   return (
     <div>
-      <nav className="navbar">
-        <div className="navbar-logo">
-          <Link to="/" className="navbar-link">EnviroHotel</Link>
-        </div>
-        <ul className="navbar-links">
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/login">Login</Link></li>
-          <li><Link to="/register">Register</Link></li>
-          <li><Link to="/book-now">Book Now</Link></li>
-        </ul>
-      </nav>
-
+      <NavBar /> {/* Include the Navbar at the top */}
       <div className="login-container">
         <h2 className="login-title">Login</h2>
         {error && <p className="login-error">{error}</p>}
@@ -74,5 +62,7 @@ const Login = () => {
     </div>
   );
 };
+
+
 
 export default Login;

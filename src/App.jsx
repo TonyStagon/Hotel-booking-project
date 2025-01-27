@@ -30,13 +30,13 @@ function App() {
   const { currentUser } = useAuth();
 
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App">
-          <ToastContainer />
-          <Elements stripe={stripePromise}>
-            <Routes>
-              <Route 
+ <AuthProvider>
+  <Router>
+     <div className="App">
+        <ToastContainer />
+        <Elements stripe={stripePromise}>
+           <Routes>
+           <Route 
                 path="/" 
                 element={currentUser ? <Navigate to="/dashboard" /> : <Home />} 
               />
@@ -59,8 +59,7 @@ function App() {
           </Elements>
         </div>
       </Router>
-    </AuthProvider>
+</AuthProvider>
   );
 }
-
 export default App;

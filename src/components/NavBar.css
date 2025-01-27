@@ -12,9 +12,29 @@
     padding: 10px 20px;
     box-sizing: border-box;
     z-index: 1000;
+    /* Ensures Navbar stays on top */
     flex-wrap: wrap;
     /* Allows wrapping for smaller screens */
 }
+
+
+/* Add margin to prevent content overlap */
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.home-container,
+.register-container {
+    padding-top: 60px;
+    /* Ensures content starts below Navbar */
+}
+
+
+/* Ensure all links display properly */
 
 .navbar ul {
     display: flex;
@@ -38,6 +58,9 @@
     /* Slight hover effect */
 }
 
+
+/* Innovation Hub branding */
+
 .navbar .innovation-hub {
     font-size: 26px;
     font-weight: bold;
@@ -47,37 +70,8 @@
     color: white;
 }
 
-.navbar-link {
-    color: white;
-    text-decoration: none;
-    font-size: 24px;
-}
 
-.navbar-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.navbar .book-now-btn {
-    background-color: #ffffff;
-    color: #52e73f;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-transform: uppercase;
-    font-weight: bold;
-    border: 2px solid #52e73f;
-    cursor: pointer;
-}
-
-.navbar .book-now-btn:hover {
-    background-color: #00cc66;
-    color: white;
-    border: 2px solid #00cc66;
-}
-
-
-/* Responsive Design for Mobile Devices */
+/* Responsive Design */
 
 @media (max-width: 768px) {
     .navbar {
@@ -98,11 +92,6 @@
         font-size: 20px;
         /* Reduce font size on mobile */
     }
-    .navbar .book-now-btn {
-        width: 100%;
-        text-align: center;
-        padding: 10px 0;
-    }
 }
 
 @media (max-width: 480px) {
@@ -111,8 +100,5 @@
     }
     .navbar li a {
         font-size: 16px;
-    }
-    .navbar .book-now-btn {
-        font-size: 14px;
     }
 }

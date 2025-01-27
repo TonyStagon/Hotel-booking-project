@@ -52,9 +52,8 @@ const BookNow = () => {
 
   return (
     <div className="booknow-container">
-      {/* Display NavBar */}
-      {currentUser && <NavBar user={currentUser} onLogout={onLogout} />}
-
+      {/* Ensure Navbar is always visible */}
+      <NavBar user={currentUser} onLogout={onLogout} />
       <h1>Book Now</h1>
       <div className="search-form">
         <input

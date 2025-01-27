@@ -8,8 +8,11 @@ import './Home.css'; // Add CSS styles for Home component
 
 const Home = () => {
   return (
+    <div>
+    {/* Navbar is independent of the register-container */}
+    <NavBar />
     <div className="home-container">
-      <NavBar /> {/* Display the Navbar */}
+    
 
       <div className="home-content">
         <p>Hotel & Resort</p>
@@ -22,6 +25,7 @@ const Home = () => {
       </div>
 
       <Footer /> {/* Display the Footer */}
+    </div>
     </div>
   );
 };
