@@ -99,6 +99,7 @@ ChatGPT
 Here’s the pseudocode for your project, outlining the main functionality and flow:
 
 Pseudocode for Hotel Management Application
+
 1. Initialize the Project
 plaintext
 Copy
@@ -107,6 +108,7 @@ Start by setting up the React app:
   - Initialize React project using create-react-app
   - Install necessary dependencies (React Router, Firebase, Stripe, Toastify)
   - Create .env file to store sensitive API keys (Firebase and Stripe)
+
 2. Set Up Firebase
 plaintext
 Copy
@@ -133,6 +135,7 @@ Define routes using React Router:
   - Account: User account settings
   - UploadPicture: Upload profile picture
   - 404 Route: Redirect unknown paths to Home
+
 4. Implement Authentication
 plaintext
 Copy
@@ -151,6 +154,7 @@ Create AdminProtectedRoute component:
   - Check if user has admin role
   - If admin, render the desired component
   - Otherwise, redirect to home page
+
 5. Build Core Features
 Discover Page
 
@@ -180,7 +184,9 @@ AdminDashboard
 Fetch and display pending reservations
 Provide actions to approve or decline bookings
 Add controls to manage accommodations (add, edit, delete)
+
 6. Add Styling
+
 plaintext
 Copy
 Edit
@@ -188,6 +194,7 @@ Design CSS for responsiveness:
   - Use CSS Grid and Flexbox for layout
   - Add media queries for mobile responsiveness
   - Use consistent color schemes and spacing
+
 7. Error Handling
 plaintext
 Copy
@@ -196,6 +203,7 @@ Implement error handling:
   - Show success/error messages using React Toastify
   - Validate user inputs in forms
   - Handle network or permission errors in Firebase interactions
+
 8. Test and Debug
 plaintext
 Copy
