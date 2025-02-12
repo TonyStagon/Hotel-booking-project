@@ -10,6 +10,176 @@ body {
 }
 
 
+/* Navbar styles */
+
+.admin-navbar {
+    background-color: #159b11;
+    color: #159b11;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-links {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.navbar-links .nav-link {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.navbar-links .nav-link:hover {
+    color: #007bff;
+}
+
+
+/* AddRoom form styles */
+
+.add-room {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.add-room .card {
+    border: none;
+    border-radius: 8px;
+}
+
+.add-room .form-label {
+    font-weight: 500;
+}
+
+.add-room .btn-primary {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.add-room .text-danger {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+
+/* AddRoom-specific styles */
+
+.add-room {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #26b419;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.add-room h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.add-room form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.add-room select,
+.add-room input,
+.add-room textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.add-room textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.add-room button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.add-room button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.add-room .error {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+
+/* ... (Existing CSS) */
+
+.add-room-form {
+    position: fixed;
+    /* Stay in place */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Center the form */
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    /* Ensure it's on top */
+    border-radius: 8px;
+    /* Rounded corners */
+}
+
+.add-room-form input,
+.add-room-form select {
+    /* Style select too */
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    /* Rounded corners for inputs */
+    border: 1px solid #ccc;
+}
+
+.add-room-form button {
+    padding: 8px 16px;
+    margin-top: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    /* Rounded corners for buttons */
+}
+
+.add-room-form button:hover {
+    background-color: #45a049;
+}
+
+.add-room-form .error {
+    color: red;
+    margin-top: 5px;
+}
+
+
+/* ... (Rest of your CSS) */
+
+
 /* Navbar */
 
 .admin-navbar {
@@ -119,6 +289,21 @@ body {
 
 /* Hotel List Styling */
 
+
+/* Hotel List Grid Layout */
+
+.hotel-list {
+    padding: 20px;
+}
+
+.hotel-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Two columns */
+    gap: 20px;
+    /* Spacing between grid items */
+}
+
 .hotel-item {
     background-color: #ffffff;
     border: 1px solid #dee2e6;
@@ -161,6 +346,9 @@ body {
     padding: 10px 20px;
     border-radius: 6px;
     margin-right: 15px;
+    color: white;
+    border: none;
+    cursor: pointer;
 }
 
 .hotel-item button:hover {
@@ -177,6 +365,13 @@ body {
 
 
 /* Responsive Design */
+
+@media (max-width: 768px) {
+    .hotel-grid {
+        grid-template-columns: 1fr;
+        /* Single column on smaller screens */
+    }
+}
 
 @media (max-width: 768px) {
     .admin-dashboard {

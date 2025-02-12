@@ -19,26 +19,27 @@ import { AuthProvider, useAuth } from './components/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Booked from './components/Booked';
+import AddRoom from './components/AddRoom'; // Import the AddRoom component
 import PaymentPage from './components/PaymentPage';
 import Reservations from './components/Reservations';
-import UploadPicture from './components/UploadPicture'; // Import UploadPicture
+import UploadPicture from './components/UploadPicture';
 import LoginUpdates from './components/LoginUpdates';
-// Load your Stripe public key
+
 const stripePromise = loadStripe('pk_test_51QDhySK00NR3qztWpPut9XbyDJBEXmT5kS30f49cVi7yGoR4QpYuaVObIOILM8UGUwk0V9LNzdGhlxDKNLzZlNY900HE3Mbmjt');
 
 function App() {
   const { currentUser } = useAuth();
 
   return (
- <AuthProvider>
-  <Router>
-     <div className="App">
-        <ToastContainer />
-        <Elements stripe={stripePromise}>
-           <Routes>
-           <Route 
-                path="/" 
-                element={currentUser ? <Navigate to="/dashboard" /> : <Home />} 
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <ToastContainer />
+          <Elements stripe={stripePromise}>
+            <Routes>
+              <Route
+                path="/"
+                element={currentUser ? <Navigate to="/dashboard" /> : <Home />}
               />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
@@ -48,6 +49,7 @@ function App() {
               <Route path="/dashboard" element={<ProtectedRoute userElement={<Dashboard />} />} />
               <Route path="/finance" element={<FinancePage />} />
               <Route path="/admin-dashboard" element={<ProtectedRoute adminElement={<AdminDashboard />} />} />
+              <Route path="/add-room/:hotelId" element={<AddRoom />} /> {/* Route for Adding Room */}
               <Route path="/reservations" element={<AdminProtectedRoute><Reservations /></AdminProtectedRoute>} />
               <Route path="/book-now" element={<BookNow />} />
               <Route path="/account/login-updates" element={<LoginUpdates />} />
@@ -59,7 +61,8 @@ function App() {
           </Elements>
         </div>
       </Router>
-</AuthProvider>
+    </AuthProvider>
   );
 }
+
 export default App;

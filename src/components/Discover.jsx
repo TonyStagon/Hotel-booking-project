@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase'; // Firebase Firestore instance
-import { useNavigate } from 'react-router-dom'; // For navigation
-import './Discover.css'; // Add CSS styling for Discover
+import { db } from './firebase';
+import { useNavigate } from 'react-router-dom';
+import './Discover.css';
+import NavBar from './NavBar'; // Import NavBar
+import { useAuth } from './AuthContext'; // Import authentication context
 
 const Discover = () => {
   const [hotels, setHotels] = useState([]);
@@ -15,18 +17,17 @@ const Discover = () => {
   });
 
   const navigate = useNavigate();
+  const { currentUser, onLogout } = useAuth(); // Get user authentication state
 
-  // Fetch hotels from Firestore
   useEffect(() => {
     const fetchHotels = async () => {
       const hotelCollection = await getDocs(collection(db, 'hotels'));
       setHotels(hotelCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-      setFilteredHotels(hotelCollection.docs.map(doc => ({ id: doc.id, ...doc.data() }))); // Initialize filtered hotels
+      setFilteredHotels(hotelCollection.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     };
     fetchHotels();
   }, []);
 
-  // Handle input change for the search form
   const handleChange = (e) => {
     setSearchCriteria({
       ...searchCriteria,
@@ -34,24 +35,25 @@ const Discover = () => {
     });
   };
 
-  // Filter hotels based on search criteria
   const handleSearch = () => {
     const { checkIn, checkOut, location, guests } = searchCriteria;
     const filtered = hotels.filter(hotel => {
       const matchesLocation = hotel.location.toLowerCase().includes(location.toLowerCase());
-      const matchesGuests = hotel.capacity >= guests; // Ensure 'capacity' field exists in your hotel data
+      const matchesGuests = hotel.capacity >= guests;
       return matchesLocation && matchesGuests;
     });
     setFilteredHotels(filtered);
   };
 
-  // Navigate to the HotelDetails page with the selected hotel's data
   const handleReserve = (hotel) => {
-    navigate(`/hotel/${hotel.id}`, { state: { hotel } }); // Pass hotel data to HotelDetails page
+    navigate(`/hotel/${hotel.id}`, { state: { hotel } });
   };
 
   return (
     <div className="discover-container">
+      {/* Include NavBar */}
+      <NavBar user={currentUser} onLogout={onLogout} />
+
       <h1>Discover Hotels</h1>
 
       {/* Search Form */}

@@ -125,25 +125,12 @@ const AdminDashboard = () => {
     setEditingHotelId(null);
   };
 
-  // Placeholder functions for handling reservations
-  const approveReservation = (id) => {
-    console.log(`Approved reservation for hotel ID: ${id}`);
-    // Logic to update the reservation status in Firestore
-  };
-
-  const declineReservation = (id) => {
-    console.log(`Declined reservation for hotel ID: ${id}`);
-    // Logic to update the reservation status in Firestore
-  };
-
   return (
     <div className="admin-dashboard">
       <nav className="admin-navbar">
         <h2>Admin Dashboard</h2>
         <div className="navbar-links">
           <Link to="/admin-dashboard">Dashboard</Link>
-       
-        
           <Link to="/reservations">Reservations</Link> {/* Link to Reservations page */}
           <button onClick={handleLogout} className="logout-button">Logout</button>
         </div>
@@ -182,14 +169,14 @@ const AdminDashboard = () => {
           required
         />
         <textarea
-          placeholder="Facilities (comma separated)"
+          placeholder="Facilities"
           value={newHotel.facilities}
-          onChange={(e) => setNewHotel({ ...newHotel, facilities: e.target.value.split(',').map(f => f.trim()) })}
+          onChange={(e) => setNewHotel({ ...newHotel, facilities: e.target.value })}
         />
         <textarea
-          placeholder="Policies (comma separated)"
+          placeholder="Policies"
           value={newHotel.policies}
-          onChange={(e) => setNewHotel({ ...newHotel, policies: e.target.value.split(',').map(p => p.trim()) })}
+          onChange={(e) => setNewHotel({ ...newHotel, policies: e.target.value })}
         />
         <input
           type="number"
@@ -210,26 +197,27 @@ const AdminDashboard = () => {
         </button>
       </form>
 
-      <div>
+      <div className="hotel-list">
         <h2>Your Hotels</h2>
-        {hotels.map((hotel) => (
-          <div key={hotel.id} className="hotel-item">
-            <h3>{hotel.name}</h3>
-            <p>Location: {hotel.location}</p>
-            <p>Price: {hotel.price}</p>
-            <p>Rating: {hotel.rating}</p>
-            <p>Facilities: {Array.isArray(hotel.facilities) ? hotel.facilities.join(', ') : 'N/A'}</p>
-            <p>Policies: {Array.isArray(hotel.policies) ? hotel.policies.join(', ') : 'N/A'}</p>
-            <p>Rooms Available: {hotel.roomsAvailable}</p>
-            {hotel.gallery.map((imageUrl, index) => (
-              <img key={index} src={imageUrl} alt={`${hotel.name}-${index}`} width="100" />
-            ))}
-            <button onClick={() => editHotel(hotel.id)}>Edit</button>
-            <button onClick={() => deleteHotel(hotel.id)}>Delete</button>
-            {/* Buttons to approve and decline reservations */}
-         
-          </div>
-        ))}
+        <div className="hotel-grid">
+          {hotels.map((hotel) => (
+            <div key={hotel.id} className="hotel-item">
+              <h3>{hotel.name}</h3>
+              <p>Location: {hotel.location}</p>
+              <p>Price: {hotel.price}</p>
+              <p>Rating: {hotel.rating}</p>
+              <p>Facilities: {Array.isArray(hotel.facilities) ? hotel.facilities.join(', ') : 'N/A'}</p>
+              <p>Policies: {Array.isArray(hotel.policies) ? hotel.policies.join(', ') : 'N/A'}</p>
+              <p>Rooms Available: {hotel.roomsAvailable}</p>
+              {hotel.gallery.map((imageUrl, index) => (
+                <img key={index} src={imageUrl} alt={`${hotel.name}-${index}`} width="100" />
+              ))}
+              <button onClick={() => editHotel(hotel.id)}>Edit</button>
+              <button onClick={() => deleteHotel(hotel.id)}>Delete</button>
+              <button onClick={() => navigate(`/add-room/${hotel.id}`)}>Add Room</button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

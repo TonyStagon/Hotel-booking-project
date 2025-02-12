@@ -1,9 +1,10 @@
 // Reservations.jsx
 
 import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
+import { db, auth } from './firebase'; // Import auth from Firebase
 import { collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
+import { signOut } from 'firebase/auth'; // Import signOut from Firebase Auth
 import './Reservations.css';
 
 const Reservations = () => {
@@ -38,8 +39,13 @@ const Reservations = () => {
     }
   };
 
-  const handleLogout = () => {
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Sign out from Firebase Auth
+      navigate('/login'); // Navigate to the login page
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
   };
 
   return (
