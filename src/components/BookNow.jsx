@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
 import './BookNow.css';
-import NavBar from './NavBar'; // NavBar already imported
+import NavBar from './NavBar';
 import { useAuth } from './AuthContext';
 
 const BookNow = () => {
@@ -17,7 +17,7 @@ const BookNow = () => {
   });
 
   const navigate = useNavigate();
-  const { currentUser, onLogout } = useAuth(); // Use the currentUser from AuthContext
+  const { currentUser, onLogout } = useAuth();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -46,13 +46,12 @@ const BookNow = () => {
     setFilteredHotels(filtered);
   };
 
-  const handleReserve = (hotel) => {
-    navigate(`/hotel/${hotel.id}`, { state: { hotel } });
+  const handleSeeRooms = (hotelId) => {
+    navigate(`/hotel/${hotelId}/rooms`);
   };
 
   return (
     <div className="booknow-container">
-      {/* Ensure Navbar is always visible */}
       <NavBar user={currentUser} onLogout={onLogout} />
       <h1>Book Now</h1>
       <div className="search-form">
@@ -96,7 +95,7 @@ const BookNow = () => {
               <p>Location: {hotel.location}</p>
               <p>Price per night: ${hotel.price}</p>
               <p>Rating: {hotel.rating} stars</p>
-              <button onClick={() => handleReserve(hotel)}>Reserve</button>
+              <button onClick={() => handleSeeRooms(hotel.id)}>See Rooms</button>
             </div>
           ))
         ) : (

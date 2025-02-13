@@ -106,7 +106,7 @@
 }
 
 .navbar-links a {
-    color: white;
+    color: rgb(18, 126, 117);
     text-decoration: none;
     transition: color 0.3s ease;
 }

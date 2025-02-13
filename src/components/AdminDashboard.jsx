@@ -215,6 +215,7 @@ const AdminDashboard = () => {
               <button onClick={() => editHotel(hotel.id)}>Edit</button>
               <button onClick={() => deleteHotel(hotel.id)}>Delete</button>
               <button onClick={() => navigate(`/add-room/${hotel.id}`)}>Add Room</button>
+              <button onClick={() => navigate(`/view-rooms/${hotel.id}`)}>View Rooms</button> {/* Add this button */}
             </div>
           ))}
         </div>

@@ -4,6 +4,7 @@ import { auth } from './firebase';
 import { reauthenticateWithCredential, EmailAuthProvider, updatePassword } from 'firebase/auth';
 import './LoginUpdates.css';
 import CustomNavBar from './CustomNavBar';
+
 const LoginUpdates = () => {
   const [currentEmail, setCurrentEmail] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');

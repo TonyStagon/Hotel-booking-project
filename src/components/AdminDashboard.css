@@ -192,7 +192,7 @@ body {
     background-color: #186e07;
     padding: 0 70px;
     /* Only side padding */
-    color: white;
+    color: rgb(43, 187, 14);
     width: 100%;
     margin-top: -5%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -204,7 +204,7 @@ body {
 }
 
 .admin-navbar .navbar-links a {
-    color: white;
+    color: rgb(26, 170, 50);
     text-decoration: none;
 }
 

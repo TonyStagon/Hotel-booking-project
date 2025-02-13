@@ -1,0 +1,117 @@
+/* HotelRooms.css */
+
+
+/* Container for the entire component */
+
+.hotel-rooms-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+
+/* Heading for the rooms section */
+
+.hotel-rooms-container h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+
+/* Grid layout for the list of rooms */
+
+.room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+
+/* Styling for each room item */
+
+.room-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Room type heading */
+
+.room-item h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+
+/* Room details (price, description) */
+
+.room-item p {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+}
+
+
+/* Container for room images */
+
+.room-images {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+/* Individual room images */
+
+.room-images img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+
+/* Reserve button styling */
+
+.room-item button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.room-item button:hover {
+    background-color: #0056b3;
+}
+
+
+/* Message when no rooms are available */
+
+.room-list p {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #777;
+    grid-column: 1 / -1;
+}
